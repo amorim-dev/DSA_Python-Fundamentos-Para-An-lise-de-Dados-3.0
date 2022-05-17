@@ -6,4 +6,4 @@ I will use this space to show some projects that I did in the "Python Fundamento
 
 ### Projects :construction:
 - [x] Lab02 - Developing a python calculator  
-- [ ] Lab03 - Developing a Hangman application using PPO
+- [x] Lab03 - Developing a Hangman application using PPO
