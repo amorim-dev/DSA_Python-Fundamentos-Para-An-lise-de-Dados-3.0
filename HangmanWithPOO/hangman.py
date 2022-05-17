@@ -5,53 +5,139 @@
 import random
 
 # Board
-print("____________HANGMAN____________")
-print(" +---+\n |   |\n     |\n     |\n     |\n     |\n========", '\n')
-error0_img = " +---+\n |   |\n     |\n     |\n     |\n     |\n========"
-error1_img = " +---+\n |   |\n O   |\n     |\n     |\n     |\n========"
-error2_img = " +---+\n |   |\n O   |\n |   |\n     |\n     |\n========"
-error3_img = " +---+\n |   |\n O   |\n/|   |\n     |\n     |\n========"
-error4_img = " +---+\n |   |\n O   |\n/|\\  |\n     |\n     |\n========"
-error5_img = " +---+\n |   |\n O   |\n/|\\  |\n/    |\n     |\n========"
-error6_img = " +---+\n |   |\n O   |\n/|\\  |\n/ \\  |\n     |\n========"
-error_list_img = [error0_img, error1_img, error2_img, error3_img, error4_img, error5_img, error6_img]
+error_list_board = ['''
 
-# todo: Class, ver despues el nombre de todas las variables para coincidir con los que fui poniendo
+____________HANGMAN____________
+
+ +---+
+ |   |
+     |
+     |
+     |
+     |
+======== ''', '''
+ 
+ +---+
+ |   |
+ O   |
+     |
+     |
+     |
+========''', '''
+
+ +---+
+ |   |
+ O   |
+ |   |
+     |
+     |
+========''', '''
+
+ +---+
+ |   |
+ O   |
+/|   |
+     |
+     |
+========''', '''
+
+ +---+
+ |   |
+ O   |
+/|\\ |
+     |
+     |
+========''', '''
+
+ +---+
+ |   |
+ O   |
+/|\\ |
+/    |
+     |
+========''', '''
+
+ +---+
+ |   |
+ O   |
+/|\\ |
+/ \\ |
+     |
+========''']
+
+
+# Class
 class Hangman:
+
     # Constructor method
     def __init__(self, word):
+        self.word = word
+        self.correct_attempts = 0
+        self.wrong_attempts = 0
+        self.correct_letters = []
+        self.wrong_letters = []
+        self.underline_list = ''
 
     # method to guess the letter
-    def gues(self, letter):
+    def guess(self, letter):
+        if letter in self.word and letter not in self.correct_letters:
+            self.correct_letters.append(letter)
+            self.correct_attempts += 1
+        elif letter not in self.word and letter not in self.wrong_letters:
+            self.wrong_letters.append(letter)
+            self.wrong_attempts += 1
 
     # method to check if the game has ended
     def hangman_over(self):
+        if len(self.wrong_letters) == 6 or self.hangman_won():
+            return True
+        return False
 
     # method to check if the player has won
     def hangman_won(self):
+        if self.underline_list == self.word:
+            return True
+        return False
 
-    # method to not showing the letter on the board
-    def hide_word(self):
+    # method to show the letter on the board
+    def show_underline(self):
+        self.underline_list = ''
+        for letter in self.word:
+            if letter not in self.correct_letters:
+                self.underline_list += '_'
+            else:
+                self.underline_list += letter
 
     # method to check the game status and print the board
     def print_game_status(self):
+        for i in error_list_board:
+            if error_list_board.index(i) == self.wrong_attempts:
+                print(i)
+        print("\nWord: ", self.underline_list)
+        print("\nWrong letters: ", self.wrong_letters)
+        print("Correct letters: ", self.correct_letters)
 
 
-# function to read a random word in the list of words (See if I have to use this, because I did different) todo: listo
+# function to read a random word in the list of words
 # strip - Remove spaces before and after the word
 def rand_word():
     with open("list_of_words.txt", "r") as f:
         bank = f.readlines()
-    return bank[random.randint(a,len(bank))].strip()
+    return bank[random.randint(0, len(bank))].strip()
+
 
 # Main Function - program execution
 def main():
-    # objeto
+    # object
     game = Hangman(rand_word())
 
-    # While the game is not finished, print the status, request a letter and read the character
+# While the game is not finished, print the status, request a letter and read the character
+    while not game.hangman_over():
+        game.print_game_status()
+        user_letter = input("\n\nType one letter: ")
+        game.guess(user_letter)
+        game.show_underline()
 
-    # Check the status game
     game.print_game_status()
 
     # According to the status, prints a message on the screen for the user
@@ -59,52 +145,12 @@ def main():
         print("\nCongratulations! You won!")
     else:
         print("\nGame over!")
-        print("The word was " + game_word)
+        print("The word was " + game.word)
 
-    print("It was nice playing with you! Now go to study\n")
+    print("It was nice playing with you!\n")
+
 
 # executes the program
-if __name__ =="__main__":
+if __name__ == "__main__":
     main()
 
-
-correct_letters = []
-wrong_letters = []
-underlines_list = []
-
-correct_attempts = 0
-wrong_attempts = 0
-count_word_letters = len(word_letters)
-
-for i, word_letter in enumerate(list_word):
-    underlines_list.append('_')
-
-while wrong_attempts < 6 and correct_attempts < count_word_letters:
-    letter = input("\n\nType one letter: ")
-    found_letter = False
-    for i, word_letter in enumerate(word):
-        if word_letter == letter:
-            found_letter = True
-            underlines_list[i] = letter
-
-    if found_letter:
-        correct_letters.append(letter)
-        correct_attempts += 1
-    else:
-        wrong_letters.append(letter)
-        wrong_attempts += 1
-
-    for i in error_list_img:
-        if error_list_img.index(i) == wrong_attempts:
-            print(i)
-
-    print("\nWrong letters: ", wrong_letters)
-    print("Correct letters: ", correct_letters)
-
-    print('\nWord: ')
-    for word_letter in underlines_list:
-        print(word_letter, end='')
-
-
-# fixme: despúes al final errores en caso que tipee algo que no sea letra
-#  o mas de una letra junta, o mas de una vez la misma letra
