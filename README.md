@@ -1,4 +1,4 @@
-# Python Fundamentals for Data Analysis 3.0
+# Python for Data Analysis and Data Science
 #### :round_pushpin: In Data Science Academy 
 
 ---
